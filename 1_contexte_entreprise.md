@@ -1,7 +1,7 @@
 # Spécifications Fonctionnelles - Contexte & Métier
 
 ## 1. Présentation de l'Entreprise
-L'entreprise est une structure à taille humaine (3 collaborateurs sur le terrain) spécialisée dans la **vente et la livraison de produits surgelés à domicile**.
+L'entreprise est une structure à taille humaine spécialisée dans la **vente et la livraison de produits surgelés à domicile**.
 
 Chaque employé possède sa propre liste de clients attitrés et réalise des tournées régulières pour livrer les commandes directement chez les particuliers.
 
