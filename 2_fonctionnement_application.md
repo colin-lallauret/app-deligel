@@ -3,10 +3,12 @@
 ## 1. Logique Globale du Mode "Offline-First"
 L'application fonctionne sans connexion Internet active[cite: 13]. La synchronisation avec le serveur cloud se fait en arrière-plan[cite: 13].
 
-### Cycle d'une Journée Type (Mode Routine) :
-1. **Le Matin (Au dépôt) :** Le livreur clique sur **"Préparer ma tournée du jour"**[cite: 13]. L'application télécharge localement l'intégralité des données de la tournée (fiches clients, géolocalisation, notes et photos repères)[cite: 13]. Un voyant vert indique *"Tournée prête"*[cite: 13].
-2. **Pendant la Tournée :** L'application affiche un bandeau visuel **"Mode Hors-ligne"** si le réseau coupe[cite: 13]. L'employé navigue, valide ses livraisons, modifie des notes ou prend une photo[cite: 13]. Tout est écrit instantanément en local[cite: 13].
-3. **Au Retour du Réseau :** La synchronisation s'enclenche automatiquement[cite: 13]. Les données locales sont poussées vers le serveur central[cite: 13].
+### Cycle d'une Journée Type (Mode Routine et Synchronisation) :
+1. **Le Matin (Au dépôt - Connexion Wi-Fi/4G stable) :** Le livreur clique sur **"Préparer ma tournée du jour"**. L'application télécharge localement l'intégralité des données de la tournée (fiches clients, géolocalisation, notes, photos repères, historique d'achat client et catalogue produit à jour). C'est aussi à ce moment que l'application vérifie si une mise à jour applicative à chaud (EAS Update) est disponible et l'applique pour démarrer la journée avec la dernière version du code. Un voyant vert indique *"Tournée prête"*.
+2. **Pendant la Tournée (Mode Offline-First) :** L'application fonctionne de manière 100% autonome. L'employé navigue, enregistre ses livraisons, ajoute des commentaires, gère ses ventes et crée des tickets. Tout est écrit instantanément dans la base de données SQLite locale.
+3. **Pendant la journée (En arrière-plan - Synchronisation opportuniste) :** Dès que l'appareil capte du réseau (4G/5G), le moteur de synchronisation pousse automatiquement en arrière-plan les données de la file d'attente (logs de passage validés, commandes passées) vers le serveur central.
+4. **Le Soir (Au dépôt - Clôture et Bilan) :** Le livreur clique sur **"Clôturer ma tournée"**. L'application force la synchronisation de toutes les données locales restantes non encore synchronisées, valide le retour de stock (invendus), et génère le récapitulatif comptable de la journée pour l'administrateur.
+
 
 ## 2. Fonctionnalités Clés sur le Terrain
 
@@ -15,13 +17,15 @@ L'application fonctionne sans connexion Internet active[cite: 13]. La synchronis
 * **Code Couleur de Statut :** Chaque client de la liste arbore un indicateur visuel : `Gris` (Passage non effectué), `Vert` (Livraison validée), `Rouge` (Client absent ou anomalie)[cite: 13].
 
 ### B. La Fiche Client Détaillée
-Chaque fiche client regroupe les informations indispensables à la livraison[cite: 13] :
-* Nom, Prénom, Téléphone (bouton d'appel en 1 clic via le réseau cellulaire classique)[cite: 13].
-* Adresse textuelle complète et horaire de passage théorique prévu[cite: 13].
-* **Position GPS Précise :** Un bouton permet de capturer instantanément la latitude/longitude courante de l'appareil (temporisation de 3 secondes pour stabiliser la puce GPS)[cite: 13]. Une mini-carte permet d'ajuster visuellement le marqueur ("pin") si nécessaire[cite: 13].
-* **Navigation GPS :** Un bouton dédié ouvre l'application Google Maps native du téléphone avec les coordonnées exactes en paramètre[cite: 13].
-* **Photo Historique "Repère" :** Une ou deux photos permanentes stockées dans l'appareil permettant d'identifier un point critique d'accès (portail, boîte aux lettres cachée)[cite: 13].
-* **Notes Complémentaires :** Champ de texte libre pour les spécificités terrain (*"Sonner fort", "Laisser dans la glacière bleue"*)[cite: 13].
+Chaque fiche client regroupe les informations indispensables à la livraison :
+* Nom, Prénom, Téléphone (bouton d'appel en 1 clic via le réseau cellulaire classique).
+* Adresse textuelle complète et horaire de passage théorique prévu.
+* **Position GPS Précise :** Un bouton permet de capturer instantanément la latitude/longitude courante de l'appareil (temporisation de 3 secondes pour stabiliser la puce GPS). Une mini-carte permet d'ajuster visuellement le marqueur ("pin") si nécessaire.
+* **Navigation GPS :** Un bouton dédié ouvre l'application Google Maps native du téléphone avec les coordonnées exactes en paramètre.
+* **Photo Historique "Repère" :** Une ou deux photos permanentes stockées dans l'appareil permettant d'identifier un point critique d'accès (portail, boîte aux lettres cachée).
+* **Notes Complémentaires :** Champ de texte libre pour les spécificités terrain (*"Sonner fort", "Laisser dans la glacière bleue"*).
+* **Bouton "Vente chez le client" (Évolution) :** Ouvre un catalogue de produits local, permettant de saisir une commande hors-ligne, de générer un ticket de caisse, et de renseigner le mode de paiement (ex: saisie manuelle du montant sur le TPE physique).
+* **Bouton "Historique d'achat" (Évolution) :** Permet de consulter la liste des anciennes factures/tickets du client, avec le détail des produits achetés et les dates de passage.
 
 ## 3. Gestion des Conflits de Synchronisation
 * **Cloisonnement strict :** Un livreur ne peut pas éditer les données d'une tournée qui ne lui est pas explicitement attribuée[cite: 13].
