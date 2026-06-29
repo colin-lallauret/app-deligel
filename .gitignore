@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Vector Store (données indexées localement)
+src/database/chroma_db/
+
+# Mémoire dynamique (données utilisateur)
+src/database/mem0_store.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
